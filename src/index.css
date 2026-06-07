@@ -1,0 +1,27 @@
+body {
+    background-color: #000;
+    color: #fff;
+}
+
+/* Horizontal scroll */
+.scroll-container {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 15px;
+}
+
+.scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background: #ffc107;
+    border-radius: 4px;
+}
+
+/* Cards */
+.card-sw {
+    min-width: 250px;
+    max-width: 250px;
+    border: 1px solid #444;
+}

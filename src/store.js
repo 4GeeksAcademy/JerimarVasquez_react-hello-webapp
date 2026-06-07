@@ -1,32 +1,70 @@
-export const initialStore=()=>{
-  return{
-    message: null,
-    todos: [
-      {
-        id: 1,
-        title: "Make the bed",
-        background: null,
-      },
-      {
-        id: 2,
-        title: "Do my homework",
-        background: null,
-      }
-    ]
-  }
-}
+const getState = ({ getStore, getActions, setStore }) => {
+    return {
+        store: {
+            people: [],
+            planets: [],
+            vehicles: [],
+            favorites: []
+        },
 
-export default function storeReducer(store, action = {}) {
-  switch(action.type){
-    case 'add_task':
+        actions: {
+            loadPeople: async () => {
+                try {
+                    const resp = await fetch("https://www.swapi.tech/api/people");
+                    const data = await resp.json();
+                    if (data?.results) {
+                        setStore({ people: data.results });
+                    }
+                } catch (error) {
+                    console.error("Error loading people:", error);
+                }
+            },
 
-      const { id,  color } = action.payload
+            loadPlanets: async () => {
+                try {
+                    const resp = await fetch("https://www.swapi.tech/api/planets");
+                    const data = await resp.json();
+                    if (data?.results) {
+                        setStore({ planets: data.results });
+                    }
+                } catch (error) {
+                    console.error("Error loading planets:", error);
+                }
+            },
 
-      return {
-        ...store,
-        todos: store.todos.map((todo) => (todo.id === id ? { ...todo, background: color } : todo))
-      };
-    default:
-      throw Error('Unknown action.');
-  }    
-}
+            loadVehicles: async () => {
+                try {
+                    const resp = await fetch("https://www.swapi.tech/api/vehicles");
+                    const data = await resp.json();
+                    if (data?.results) {
+                        setStore({ vehicles: data.results });
+                    }
+                } catch (error) {
+                    console.error("Error loading vehicles:", error);
+                }
+            },
+
+            addFavorite: (item) => {
+                const store = getStore();
+                if (
+                    !store.favorites.find(
+                        f => f.uid === item.uid && f.type === item.type
+                    )
+                ) {
+                    setStore({ favorites: [...store.favorites, item] });
+                }
+            },
+
+            removeFavorite: (uid, type) => {
+                const store = getStore();
+                setStore({
+                    favorites: store.favorites.filter(
+                        f => !(f.uid === uid && f.type === type)
+                    )
+                });
+            }
+        }
+    };
+};
+
+export default getState;
